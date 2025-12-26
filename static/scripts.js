@@ -1,21 +1,21 @@
-document.getElementById('cancerForm').addEventListener('submit', function(e) {
-    let isValid = true;
-    const inputs = this.querySelectorAll('input');
+document.querySelectorAll('.predict-form').forEach(form => {
+    form.addEventListener('submit', function(e) {
+        let isValid = true;
+        const inputs = this.querySelectorAll('input');
 
-    inputs.forEach(input => {
-        const val = input.value.trim();
+        inputs.forEach(input => {
+            const val = input.value.trim();
+            if (val === "" || isNaN(val)) {
+                input.classList.add('invalid');
+                isValid = false;
+            } else {
+                input.classList.remove('invalid');
+            }
+        });
 
-        // 验证条件：不能为空且必须是数值
-        if (val === "" || isNaN(val)) {
-            input.classList.add('invalid');
-            isValid = false;
-        } else {
-            input.classList.remove('invalid');
+        if (!isValid) {
+            e.preventDefault();
+            alert("Please enter valid numerical features!");
         }
     });
-
-    if (!isValid) {
-        e.preventDefault(); // 阻止表单发送
-        alert("Please enter valid numerical features!");
-    }
 });

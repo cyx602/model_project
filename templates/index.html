@@ -2,61 +2,57 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Tumor Feature Prediction</title>
+    <title>Multi-Model Prediction</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <div class="layout-container">
-
-        <div class="card info-card">
-            <h2>Feature Analysis</h2>
-            <div class="info-content">
-                <strong>Why choose these four features?</strong>
-                <p>We chose the main geometric descriptors (radius, texture, perimeter and area) because they most directly represent the size and surface regularity of the tumor. </p>
+    <div class="page-wrapper">
+        <div class="layout-container">
+            <div class="card info-card">
+                <h2>Iris Analysis</h2>
+                <div class="info-content">
+                    <strong>Why these features?</strong>
+                    <p>We use Sepal and Petal measurements (Length/Width) to classify the specific species of an Iris flower. [cite: 25]</p>
+                </div>
             </div>
-            <div class="divider"></div>
-            <p class="small-text">These parameters are derived from the Breast Cancer Wisconsin dataset.</p>
+            <div class="card main-card">
+                <h1>Iris Prediction</h1>
+                <form action="/predict_iris" method="POST" class="predict-form">
+                    <div class="field"><label>Sepal Length <span class="range-hint">4.3 - 7.9</span></label><input type="text" name="f1" placeholder="e.g. 5.1"></div>
+                    <div class="field"><label>Sepal Width <span class="range-hint">2.0 - 4.4</span></label><input type="text" name="f2" placeholder="e.g. 3.5"></div>
+                    <div class="field"><label>Petal Length <span class="range-hint">1.0 - 6.9</span></label><input type="text" name="f3" placeholder="e.g. 1.4"></div>
+                    <div class="field"><label>Petal Width <span class="range-hint">0.1 - 2.5</span></label><input type="text" name="f4" placeholder="e.g. 0.2"></div>
+                    <div class="model-info"><span class="badge">Accuracy: {{ iris_acc }}</span></div>
+                    <button type="submit">Classify Flower</button>
+                </form>
+                {% if iris_text %}<div class="result-box"><h3>{{ iris_text }}</h3></div>{% endif %}
+            </div>
         </div>
 
-        <div class="card main-card">
-            <h1>Tumor Prediction</h1>
-            <p class="subtitle">Enter values for diagnostic analysis</p>
+        <hr class="section-divider">
 
-            <form id="cancerForm" action="/predict" method="POST">
-                <div class="field">
-                    <label for="f1">Mean Radius <span class="range-hint">6.98 - 28.11</span></label>
-                    <input type="text" name="f1" id="f1" placeholder="e.g.: 17.99">
+        <div class="layout-container">
+            <div class="card info-card">
+                <h2>Tumor Analysis</h2>
+                <div class="info-content">
+                    <strong>Why these features?</strong>
+                    <p>Mean Radius, Texture, Perimeter, and Area represent the primary geometric descriptors of a tumor. [cite: 132]</p>
                 </div>
-
-                <div class="field">
-                    <label for="f2">Mean Texture <span class="range-hint">9.71 - 39.28</span></label>
-                    <input type="text" name="f2" id="f2" placeholder="e.g.: 10.38">
-                </div>
-
-                <div class="field">
-                    <label for="f3">Mean Perimeter <span class="range-hint">43.79 - 188.50</span></label>
-                    <input type="text" name="f3" id="f3" placeholder="e.g.: 122.8">
-                </div>
-
-                <div class="field">
-                    <label for="f4">Mean Area <span class="range-hint">143.5 - 2501.0</span></label>
-                    <input type="text" name="f4" id="f4" placeholder="e.g.: 1001.0">
-                </div>
-
-                <div class="model-info">
-                    <span class="badge">Model: Random Forest</span>
-                    <span class="badge">Accuracy: {{ model_accuracy }}</span>
-                </div>
-
-                <button type="submit">Analyze Tumor</button>
-            </form>
-
-            <div id="resultBox" class="result-box {% if 'Benign' in prediction_text %}success{% elif 'Malignant' in prediction_text %}warning{% endif %}">
-                <h3>{{ prediction_text }}</h3>
+            </div>
+            <div class="card main-card">
+                <h1>Cancer Prediction</h1>
+                <form action="/predict_cancer" method="POST" class="predict-form">
+                    <div class="field"><label>Mean Radius <span class="range-hint">6.98 - 28.1</span></label><input type="text" name="f1" placeholder="e.g. 17.99"></div>
+                    <div class="field"><label>Mean Texture <span class="range-hint">9.71 - 39.2</span></label><input type="text" name="f2" placeholder="e.g. 10.38"></div>
+                    <div class="field"><label>Mean Perimeter <span class="range-hint">43.7 - 188.5</span></label><input type="text" name="f3" placeholder="e.g. 122.8"></div>
+                    <div class="field"><label>Mean Area <span class="range-hint">143.5 - 2501</span></label><input type="text" name="f4" placeholder="e.g. 1001.0"></div>
+                    <div class="model-info"><span class="badge">Accuracy: {{ cancer_acc }}</span></div>
+                    <button type="submit">Analyze Tumor</button>
+                </form>
+                {% if cancer_text %}<div class="result-box"><h3>{{ cancer_text }}</h3></div>{% endif %}
             </div>
         </div>
     </div>
-
-    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <script src="{{ url_for('static', filename='scripts.js') }}"></script>
 </body>
 </html>

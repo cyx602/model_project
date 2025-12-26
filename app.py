@@ -4,38 +4,50 @@ import numpy as np
 
 app = Flask(__name__)
 
-model = joblib.load('model.pkl')
-scaler = joblib.load('scaler.pkl')
-accuracy = joblib.load('accuracy.pkl') # 加载保存的准确率
+# 加载所有模型
+models = {'iris': joblib.load('iris_model.pkl'), 'cancer': joblib.load('cancer_model.pkl')}
+scalers = {'iris': joblib.load('iris_scaler.pkl'), 'cancer': joblib.load('cancer_scaler.pkl')}
+accs = {'iris': joblib.load('iris_accuracy.pkl'), 'cancer': joblib.load('cancer_accuracy.pkl')}
+
 
 @app.route('/')
 def home():
-    return render_template('index.html', model_accuracy=f"{accuracy*100:.1f}%")
+    # 首页同时传递两个模型的准确率
+    return render_template('index.html',
+                           iris_acc=f"{accs['iris'] * 100:.1f}%",
+                           cancer_acc=f"{accs['cancer'] * 100:.1f}%")
 
-@app.route('/predict', methods=['POST'])
-def predict():
+
+def process_prediction(model_type, form, labels):
     try:
-        raw_features = [request.form.get('f1'), request.form.get('f2'),
-                        request.form.get('f3'), request.form.get('f4')]
+        # 获取 4 个输入值
+        features = [form.get(f'f{i}') for i in range(1, 5)]
+        if not all(features): return "Error: Missing input"
 
-        if not all(raw_features):
-            return render_template('index.html', prediction_text="Error: Missing input",
-                                   model_accuracy=f"{accuracy * 100:.1f}%")
+        # 标准化并预测
+        final = np.array([float(x) for x in features]).reshape(1, -1)
+        scaled = scalers[model_type].transform(final)
+        pred = models[model_type].predict(scaled)[0]
+        return f"Result: {labels[pred]}"
+    except:
+        return "Error: Invalid input"
 
-        # 数据标准化处理
-        final_features = np.array([float(x) for x in raw_features]).reshape(1, -1)
-        scaled_features = scaler.transform(final_features)
 
-        prediction = model.predict(scaled_features)
-        res_label = "Benign (良性)" if prediction[0] == 1 else "Malignant (恶性)"
+@app.route('/predict_iris', methods=['POST'])
+def predict_iris():
+    res = process_prediction('iris', request.form, ["Setosa", "Versicolour", "Virginica"])
+    return render_template('index.html', iris_text=res,
+                           iris_acc=f"{accs['iris'] * 100:.1f}%",
+                           cancer_acc=f"{accs['cancer'] * 100:.1f}%")
 
-        # 预测后也要带上准确率
-        return render_template('index.html',
-                               prediction_text=f'Result: {res_label}',
-                               model_accuracy=f"{accuracy * 100:.1f}%")
-    except Exception:
-        return render_template('index.html', prediction_text="Error: Invalid format",
-                               model_accuracy=f"{accuracy * 100:.1f}%")
+
+@app.route('/predict_cancer', methods=['POST'])
+def predict_cancer():
+    res = process_prediction('cancer', request.form, ["Malignant", "Benign"])
+    return render_template('index.html', cancer_text=res,
+                           iris_acc=f"{accs['iris'] * 100:.1f}%",
+                           cancer_acc=f"{accs['cancer'] * 100:.1f}%")
+
 
 if __name__ == '__main__':
     app.run(debug=True)
