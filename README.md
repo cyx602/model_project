@@ -4,7 +4,7 @@
 This project is an integrated machine learning web platform that implements two core classification tasks: **Iris Flower Species Recognition** and **Breast Cancer Nature Prediction**.
 The project demonstrates the complete engineering workflow from data preprocessing, independent model training to web deployment using **Flask**.
 
-* **Online Demo URL**: https://cyx_cancer_project.com
+* **Online Demo URL**: https://model-project.com
 * **Local Access Address**: http://127.0.0.1:5000/
 
 ---
