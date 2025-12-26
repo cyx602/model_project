@@ -28,9 +28,7 @@ model.fit(X_train, y_train)
 y_pred = model.predict(X_test)
 accuracy = accuracy_score(y_test, y_pred)
 
-print("-" * 30)
 print(f"Model Accuracy: {accuracy:.2f}")
-print("-" * 30)
 print("Classification Report:")
 print(classification_report(y_test, y_pred, target_names=data.target_names))
 
