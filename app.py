@@ -4,19 +4,13 @@ import numpy as np
 
 app = Flask(__name__)
 
-# 加载模型、缩放器和准确率指标
-# 加载所有必要文件
 model = joblib.load('model.pkl')
 scaler = joblib.load('scaler.pkl')
 accuracy = joblib.load('accuracy.pkl') # 加载保存的准确率
 
 @app.route('/')
 def home():
-    # 将准确率传给模板 [cite: 50, 64]
     return render_template('index.html', model_accuracy=f"{accuracy*100:.1f}%")
-
-
-
 
 @app.route('/predict', methods=['POST'])
 def predict():
@@ -35,7 +29,7 @@ def predict():
         prediction = model.predict(scaled_features)
         res_label = "Benign (良性)" if prediction[0] == 1 else "Malignant (恶性)"
 
-        # 预测后也要带上准确率，否则页面刷新后数据会消失
+        # 预测后也要带上准确率
         return render_template('index.html',
                                prediction_text=f'Result: {res_label}',
                                model_accuracy=f"{accuracy * 100:.1f}%")
