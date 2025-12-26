@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Tumor Feature Prediction</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="layout-container">
+
+        <div class="card info-card">
+            <h2>Feature Analysis</h2>
+            <div class="info-content">
+                <strong>Why choose these four features?</strong>
+                <p>We chose the main geometric descriptors (radius, texture, perimeter and area) because they most directly represent the size and surface regularity of the tumor. </p>
+            </div>
+            <div class="divider"></div>
+            <p class="small-text">These parameters are derived from the Breast Cancer Wisconsin dataset.</p>
+        </div>
+
+        <div class="card main-card">
+            <h1>Tumor Prediction</h1>
+            <p class="subtitle">Enter values for diagnostic analysis</p>
+
+            <form id="cancerForm" action="/predict" method="POST">
+                <div class="field">
+                    <label for="f1">Mean Radius <span class="range-hint">6.98 - 28.11</span></label>
+                    <input type="text" name="f1" id="f1" placeholder="e.g.: 17.99">
+                </div>
+
+                <div class="field">
+                    <label for="f2">Mean Texture <span class="range-hint">9.71 - 39.28</span></label>
+                    <input type="text" name="f2" id="f2" placeholder="e.g.: 10.38">
+                </div>
+
+                <div class="field">
+                    <label for="f3">Mean Perimeter <span class="range-hint">43.79 - 188.50</span></label>
+                    <input type="text" name="f3" id="f3" placeholder="e.g.: 122.8">
+                </div>
+
+                <div class="field">
+                    <label for="f4">Mean Area <span class="range-hint">143.5 - 2501.0</span></label>
+                    <input type="text" name="f4" id="f4" placeholder="e.g.: 1001.0">
+                </div>
+
+                <div class="model-info">
+                    <span class="badge">Model: Random Forest</span>
+                    <span class="badge">Accuracy: {{ model_accuracy }}</span>
+                </div>
+
+                <button type="submit">Analyze Tumor</button>
+            </form>
+
+            <div id="resultBox" class="result-box {% if 'Benign' in prediction_text %}success{% elif 'Malignant' in prediction_text %}warning{% endif %}">
+                <h3>{{ prediction_text }}</h3>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
