@@ -7,7 +7,7 @@ from sklearn.preprocessing import StandardScaler
 
 # 1. 加载鸢尾花数据集
 data = load_iris()
-X = data.data[:, :4] # 选取前4个特征
+X = data.data[:, :4]
 y = data.target
 
 # 2. 划分数据集
